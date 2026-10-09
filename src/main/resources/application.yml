@@ -1,9 +1,12 @@
 server:
     port: 9003
+    shutdown: graceful
 
 spring:
     application:
         name: dispatcher-service
+    lifecycle:
+        timeout-per-shutdown-phase: 15s
     
     cloud:
         function:
@@ -25,5 +28,22 @@ spring:
         username: user
         password: password
         connection-timeout: 5s
-    
-    
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: refresh,health,prometheus
+    endpoint:
+        health:
+            show-details: always
+            show-components: always
+            probes:
+                enabled: true
+    metrics:
+        tags:
+            application: ${spring.application.name}
+
+logging:
+    pattern:
+        level: "%5p [${spring.application.name:},%X{traceId},%X{spanId}]"

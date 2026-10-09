@@ -20,7 +20,7 @@ public class DispatcherFunctions {
     @Bean 
     public Function<OrderAcceptedMessage , Long> pack(){
         return orderAccepMessage ->{
-            log.info("The order  with id{} is packed.",
+            log.info("The order with id {} is packed.",
             orderAccepMessage.orderId());
             return orderAccepMessage.orderId();
 
@@ -30,9 +30,9 @@ public class DispatcherFunctions {
     @Bean 
     public Function<Flux<Long>,Flux<OrderDispatchedMessage>> label(){
         return orderFlux -> orderFlux.map(orderId ->{
-            log.info("the order with id{} is labeled.",orderId);
+            log.info("The order with id {} is labeled.",orderId);
             return new OrderDispatchedMessage(orderId);
-        });
+        }).doOnError(error -> log.error("Order labeling stream failed", error));
     }
     
 }
