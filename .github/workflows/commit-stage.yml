@@ -7,7 +7,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: aymanhamad2002/dispatcher-service
-  VERSION: latest
+  VERSION: ${{ github.sha }}
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -105,3 +105,7 @@ jobs:
         - name: Publish container image
           run: |
             docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        - name: publish container image with latest tag
+          run: |
+            docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
